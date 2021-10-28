@@ -10,7 +10,7 @@ while ! IP=$(kubectl get ingress -o json | jq '.items[0].status.loadBalancer.ing
   sleep 1
 done
 
-while ! curl -f http://$IP; do
+while ! curl -m 2 -f http://$IP; do
   sleep 1
 done
 
