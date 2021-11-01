@@ -9,6 +9,6 @@ curl -i -X POST \
 
 curl -i -X POST \
   --url http://localhost:8001/services/example-service/routes \
-  --data 'paths[]=/'
+  --data 'paths[]=/' \
+  --data 'protocols[]=https'
 
-curl https://sean.tips/get

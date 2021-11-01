@@ -45,13 +45,15 @@ docker run -itd --name kong-lab-ee --network=kong-lab-net \
   -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
   -e "KONG_PROXY_ERROR_LOG=/dev/stderr" \
   -e "KONG_ADMIN_ERROR_LOG=/dev/stderr" \
-  -e "KONG_PROXY_LISTEN=0.0.0.0:80, 0.0.0.0:443 ssl" \
+  -e "KONG_PROXY_LISTEN=0.0.0.0:8000, 0.0.0.0:8443" \
   -e "KONG_ADMIN_LISTEN=0.0.0.0:8001" \
-  -e "KONG_ADMIN_GUI_URL=http://sean.tips:8002" \
-  -e "KONG_PORTAL_GUI_HOST=sean.tips:8003" \
+  -e "KONG_ADMIN_API_URI=https://cp.sean.tips" \
+  -e "KONG_ADMIN_GUI_URL=https://manager.sean.tips" \
+  -e "KONG_PORTAL_GUI_HOST=portal.sean.tips" \
+  -e "KONG_PORTAL_GUI_PROTOCOL=https" \
   -e "KONG_LUA_SSL_TRUSTED_CERTIFICATE=system" \
-  -p 80:80 \
-  -p 443:443 \
+  -e "KONG_TRUSTED_IPS=0.0.0.0/0" \
+  -p 8000:8000 \
   -p 8443:8443 \
   -p 8001:8001 \
   -p 8444:8444 \
@@ -67,7 +69,7 @@ done
 
 ## add license
 curl -i -X POST http://localhost:8001/licenses \
-  -d payload="$(cat ~/license.json)"
+  -d payload="$(lpass show --notes kong)"
 
 ## enable portal
 echo "KONG_PORTAL=on kong reload exit" \
