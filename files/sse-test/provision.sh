@@ -3,6 +3,8 @@
 set -e
 set -x
 
+lpass ls > /dev/null
+
 # cleanup
 docker rm -f kong-lab-ee kong-lab-database
 docker network rm kong-lab-net || true
@@ -45,7 +47,7 @@ docker run -itd --name kong-lab-ee --network=kong-lab-net \
   -e "KONG_ADMIN_ACCESS_LOG=/dev/stdout" \
   -e "KONG_PROXY_ERROR_LOG=/dev/stderr" \
   -e "KONG_ADMIN_ERROR_LOG=/dev/stderr" \
-  -e "KONG_PROXY_LISTEN=0.0.0.0:443" \
+  -e "KONG_PROXY_LISTEN=0.0.0.0:80, 0.0.0.0:443 ssl http2" \
   -e "KONG_ADMIN_LISTEN=0.0.0.0:8001" \
   -e "KONG_ADMIN_API_URI=http://cp.sean.tips" \
   -e "KONG_ADMIN_GUI_URL=http://manager.sean.tips" \
@@ -53,6 +55,8 @@ docker run -itd --name kong-lab-ee --network=kong-lab-net \
   -e "KONG_PORTAL_GUI_PROTOCOL=http" \
   -e "KONG_LUA_SSL_TRUSTED_CERTIFICATE=system" \
   -e "KONG_TRUSTED_IPS=0.0.0.0/0" \
+  -p 80:80 \
+  -p 443:443 \
   -p 8443:8443 \
   -p 8001:8001 \
   -p 8444:8444 \
